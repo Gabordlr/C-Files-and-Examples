@@ -1,43 +1,45 @@
 #include <iostream>
-#include <cmath>
+#include <fstream>
 #include <vector>
+#include <iomanip>
+#include <sstream>
 
 using namespace std;
 
-void suma(double a[], double b)
-{
-    a[1] = 20;
-}
-
-vector<int> testList(vector<int> a, int count)
-{
-    cout << "count: " << count << endl;
-    vector<int> b;
-    if (count > 0){
-        a.push_back(count);
-        b = testList(a, count - 1);
-
-        //testing zone
-        cout << "testing zone" << endl;
-        for (int i = 0; i < a.size(); i++)
-        {
-            cout << a[i] << endl;
-        }
-
-        return b;
-    }
-}
-
-int main()
-{
-    vector<int> a;
+int main() {
+    string archivo = "string.txt";
+    int n = 24
     
-    vector<int> b = testList(a, 5);
-
-    cout << "testing zone out" << endl;
-    for (int i = 0; i < b.size(); i++)
-    {
-        cout << b[i] << endl;
+    ifstream inputFile(archivo);
+    
+    vector<int> a(n, 0);
+    
+    char c;
+    int col = 0;
+    
+    while (inputFile.get(c)) {
+        a[col] += static_cast<int>(c);
+        col++;
+        
+        if (col == n) {
+            col = 0;
+        }
     }
 
+    for (int i = 0; i < n; i++) {
+        a[i] %= 256;
+    }
+    
+    // Calcular el valor hexadecimal y almacenarlo en una cadena de salida
+    stringstream hexString;
+    for (int i = 0; i < n; i += 4) {
+        int sum = a[i] + a[i + 1] + a[i + 2] + a[i + 3];
+        int hexValue = sum % 256;
+        hexString << setfill('0') << setw(2) << hex << hexValue;
+    }
+    
+    cout << "Resultado: " << hexString.str() << endl;
+    
+    inputFile.close();
+    return 0;
 }
